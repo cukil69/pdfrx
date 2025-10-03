@@ -34,14 +34,14 @@ Future<void> _init() async {
       final config = arena.allocate<pdfium_bindings.FPDF_LIBRARY_CONFIG>(sizeOf<pdfium_bindings.FPDF_LIBRARY_CONFIG>());
       config.ref.version = 2;
 
-      final fontPaths = [?_appLocalFontPath?.path, ...Pdfrx.fontPaths];
+      final fontPaths = [if (_appLocalFontPath?.path != null)_appLocalFontPath?.path, ...Pdfrx.fontPaths];
       if (fontPaths.isNotEmpty) {
         // NOTE: m_pUserFontPaths must not be freed until FPDF_DestroyLibrary is called; on pdfrx, it's never freed.
         final fontPathArray = malloc<Pointer<Char>>(sizeOf<Pointer<Char>>() * (fontPaths.length + 1));
         for (var i = 0; i < fontPaths.length; i++) {
-          fontPathArray[i] = fontPaths[i]
-              .toNativeUtf8()
-              .cast<Char>(); // NOTE: the block allocated by toNativeUtf8 never released
+          if (fontPaths[i] != null) {
+            fontPathArray[i] = fontPaths[i]!.toNativeUtf8().cast<Char>(); // NOTE: the block allocated by toNativeUtf8 never released
+          }
         }
         fontPathArray[fontPaths.length] = nullptr;
         config.ref.m_pUserFontPaths = fontPathArray;

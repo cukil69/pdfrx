@@ -1,7 +1,5 @@
 name: pdfrx_workspace
 environment:
-  sdk: ">=3.9.0 <4.0.0"
+  sdk: ">=3.6.0 <4.0.0"
 workspace:
-  - packages/pdfrx
   - packages/pdfrx_engine
-  - packages/pdfrx/example/viewer
